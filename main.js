@@ -1,5 +1,5 @@
 /*
-@title: RAGE is a function of results divided by time
+@title: RAGE is a function of time over results.
 @author: Edward Hesketh
 @tags: []
 @addedOn: 2024-00-00
