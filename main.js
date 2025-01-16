@@ -1,5 +1,5 @@
 /*
-@title: RAGE is a function of time over results.
+@title: RAGE is a function of time over results
 @author: Edward Hesketh
 @tags: []
 @addedOn: 2024-00-00
@@ -244,7 +244,9 @@ const levels = [
 setMap(levels[level])
 
 addSprite(0,0,player)
+
 addSprite(5,5,annoyer)
+addSprite(4,5,annoyer)
 
 setPushables({
   [ player ]: []
@@ -263,7 +265,33 @@ onInput("d", () => {
   getFirst(player).x += 1
 })
 
-
 afterInput(() => {
   
 })
+
+let gameIntervals = [];
+
+gameIntervals.push(
+  setInterval(() => {
+    player_sprite = getFirst(player)
+    annoyers = getAll(annoyer)
+    annoyers.forEach((annoyer) => {
+      if (annoyer.x > player_sprite.x){
+        annoyer.x-=1
+        return
+      }
+      if (annoyer.x < player_sprite.x){
+        annoyer.x+=1
+        return
+      }
+      if (annoyer.y > player_sprite.y){
+        annoyer.y-=1
+        return
+      }
+      if (annoyer.y < player_sprite.y){
+        annoyer.y+=1
+        return
+      }
+    });
+  }, 350)
+);
