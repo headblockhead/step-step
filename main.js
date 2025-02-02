@@ -301,10 +301,16 @@ onInput("d", () => {
   getFirst(player).x += 1
 })
 
-var trapdoor_move =false;
+var last_move_was_trapdoor =false;
+var trapdoor_move_used =false;
+
 // Open the trapdoors!
 onInput("k", () => {
-  trapdoor_move = true;
+  if (trapdoor_move_used) {
+    return
+  }
+  trapdoor_move_used = true;
+  last_move_was_trapdoor = true;
   setTimeout(() => { setLegend([trapdoor, bitmap`
 LLLLLLLLLLLLLLLL
 L11166LLLL60111L
@@ -644,7 +650,7 @@ LLLLLLLLLLLLLLLL`]
 
 let movetimer = 0;
 afterInput(() => {
-  if (trapdoor_move) {trapdoor_move=false;return}
+  if (last_move_was_trapdoor) {return}
   movetimer++;
   if (movetimer == 2) {
     moveAnnoyers();
