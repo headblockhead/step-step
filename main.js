@@ -289,20 +289,33 @@ addSprite(4, 5, annoyer)
 
 // Player movement
 onInput("w", () => {
-  getFirst(player).y -= 1
+  switch (gameState){
+    case "game":
+        getFirst(player).y -= 1
+        break;
+  }
 })
 onInput("a", () => {
+    switch (gameState){
+    case "game":
   getFirst(player).x -= 1
+        break;}
 })
 onInput("s", () => {
+    switch (gameState){
+    case "game":
   getFirst(player).y += 1
+        break;}
 })
 onInput("d", () => {
+    switch (gameState){
+    case "game":
   getFirst(player).x += 1
+        break;}
 })
 
-var last_move_was_trapdoor =false;
-var trapdoor_move_used =false;
+var last_move_was_trapdoor = false;
+var trapdoor_move_used = false;
 
 // Open the trapdoors!
 onInput("k", () => {
@@ -635,14 +648,15 @@ LLLLLLLLLLLLLLLL`]
   let annoyers = getAll(annoyer)
   let trapdoors = getAll(trapdoor)
   let player_inst = getFirst(player)
-  trapdoors.forEach((trapdoor)=>{
-        if (trapdoor.x == player_inst.x && trapdoor.y == player_inst.y) {
+  trapdoors.forEach((trapdoor) => {
+    if (trapdoor.x == player_inst.x && trapdoor.y == player_inst.y) {
       gameover = true;
     }
-    annoyers.forEach((annoyer)=>{
+    annoyers.forEach((annoyer) => {
       if (annoyer.x == trapdoor.x && annoyer.y == trapdoor.y) {
-      addSprite(annoyer.x, annoyer.y, annoyer_falling);
-        setTimeout(() => { annoyer.remove(); annoyers.splice(annoyers.indexOf(annoyer), 1); }, 450);
+        addSprite(annoyer.x, annoyer.y, annoyer_falling);
+        setTimeout(() => { annoyer.remove();
+          annoyers.splice(annoyers.indexOf(annoyer), 1); }, 450);
       }
     });
   })
@@ -650,7 +664,22 @@ LLLLLLLLLLLLLLLL`]
 
 let movetimer = 0;
 afterInput(() => {
-  if (last_move_was_trapdoor) {return}
+  if (trapdoor_move_used) {
+    gameState = "nextlevel";
+      setTimeout(() => {
+      if (gameover) {
+        addText("You died!", { x: 0 ,y: 0, color: color`3`})
+        addText("Press J to restart.", { x: 0 ,y: 1, color: color`3`})
+      }else if (getAll(annoyer).length > 0) {
+        addText("You lost!", { x: 0,y: 0,color: color`3`})
+        addText("Press J to restart.", { x: 0 ,y: 1, color: color`3`})
+      }else {
+         addText("You win!", { x: 0,y: 0,color: color`4`})
+        addText("Press L to continue.", { x: 0 ,y: 1, color: color`3`})
+      }
+      }, 1000);
+  }
+  if (last_move_was_trapdoor) { return }
   movetimer++;
   if (movetimer == 2) {
     moveAnnoyers();
