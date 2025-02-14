@@ -15,11 +15,12 @@ const background_wall_TL = '6'
 const background_wall_TR = '7'
 const background_wall_BL = '8'
 const background_wall_BR = '9'
-const trapdoor = 't'
 
+const trapdoor = 't'
 const player = 'p'
 const annoyer = 'a'
 const annoyer_falling = 'f'
+const wall = 'w'
 
 setLegend(
   [player, bitmap`
@@ -90,6 +91,23 @@ L111160LL001111L
 L111166LL601111L
 L111106LL661111L
 LLLLLLLLLLLLLLLL`],
+  [wall, bitmap`
+0000000000000000
+0000000000000000
+0000000000000000
+0000000000000000
+0000000000000000
+0000000000000000
+0000000000000000
+0000000000000000
+0000000000000000
+0000000000000000
+0000000000000000
+0000000000000000
+0000000000000000
+0000000000000000
+0000000000000000
+0000000000000000`],
   [background_wall_top, bitmap`
 2222222222222222
 1000000000000001
@@ -262,429 +280,461 @@ LLLLLLLLLLLLLLLL`],
 0000000000000000`],
 )
 
-setSolids([player, annoyer])
+setSolids([player, annoyer, wall])
+
+function loadLevel(levelIndex) {
+  setMap(levels[levelIndex])
+  switch (levelIndex) {
+    case 0:
+      addSprite(0, 0, player)
+      addSprite(5, 5, annoyer)
+      addSprite(4, 5, annoyer)
+      break;
+    default:
+      console.log("error: loading undefined level")
+  }
+}
 
 let level = 0
 const levels = [
   map`
 6222222227
-5111111113
-5111111113
-5111tt1113
-5111tt1113
-5111111113
-5111111113
+5wwwwwwww3
+5w111111w3
+5wwwwwwww3
+5wwwwwwww3
+5wt11111w3
+5wwwwwwww3
 8444444449`,
 ]
+loadLevel(level)
 
 let gameover = false;
-
+let player_dead = false;
 var gameState = "game";
-
-setMap(levels[level])
-addSprite(0, 0, player)
-
-addSprite(5, 5, annoyer)
-addSprite(4, 5, annoyer)
 
 // Player movement
 onInput("w", () => {
-  switch (gameState){
+  switch (gameState) {
     case "game":
-        getFirst(player).y -= 1
-        break;
+      getFirst(player).y -= 1
+      movetimer++;
+      if (movetimer == 2) {
+        moveAnnoyers();
+        movetimer = 0;
+      }
+      break;
   }
 })
 onInput("a", () => {
-    switch (gameState){
+  switch (gameState) {
     case "game":
-  getFirst(player).x -= 1
-        break;}
+      getFirst(player).x -= 1
+      movetimer++;
+      if (movetimer == 2) {
+        moveAnnoyers();
+        movetimer = 0;
+      }
+      break;
+  }
 })
 onInput("s", () => {
-    switch (gameState){
+  switch (gameState) {
     case "game":
-  getFirst(player).y += 1
-        break;}
+      getFirst(player).y += 1
+      movetimer++;
+      if (movetimer == 2) {
+        moveAnnoyers();
+        movetimer = 0;
+      }
+      break;
+  }
 })
 onInput("d", () => {
-    switch (gameState){
+  switch (gameState) {
     case "game":
-  getFirst(player).x += 1
-        break;}
+      getFirst(player).x += 1
+      movetimer++;
+      if (movetimer == 2) {
+        moveAnnoyers();
+        movetimer = 0;
+      }
+      break;
+  }
 })
 
-var last_move_was_trapdoor = false;
-var trapdoor_move_used = false;
+onInput("j", () => {
+  loadLevel(level)
+})
 
 // Open the trapdoors!
 onInput("k", () => {
-  if (trapdoor_move_used) {
-    return
-  }
-  trapdoor_move_used = true;
-  last_move_was_trapdoor = true;
-  setTimeout(() => { setLegend([trapdoor, bitmap`
-LLLLLLLLLLLLLLLL
-L11166LLLL60111L
-L11106LLLL66111L
-L11100LLLL06111L
-L11160LLLL00111L
-L11166LLLL60111L
-L11106LLLL66111L
-L11100LLLL06111L
-L11160LLLL00111L
-L11166LLLL60111L
-L11106LLLL66111L
-L11100LLLL06111L
-L11160LLLL00111L
-L11166LLLL60111L
-L11106LLLL66111L
-LLLLLLLLLLLLLLLL`]); }, 100);
-  setTimeout(() => { setLegend([trapdoor, bitmap`
-LLLLLLLLLLLLLLLL
-L1166LL00LL6011L
-L1106LL00LL6611L
-L1100LL00LL0611L
-L1160LL00LL0011L
-L1166LL00LL6011L
-L1106LL00LL6611L
-L1100LL00LL0611L
-L1160LL00LL0011L
-L1166LL00LL6011L
-L1106LL00LL6611L
-L1100LL00LL0611L
-L1160LL00LL0011L
-L1166LL00LL6011L
-L1106LL00LL6611L
-LLLLLLLLLLLLLLLL`]); }, 200);
-  setTimeout(() => { setLegend([trapdoor, bitmap`
-LLLLLLLLLLLLLLLL
-L166LL0000LL601L
-L106LL0000LL661L
-L100LL0000LL061L
-L160LL0000LL001L
-L166LL0000LL601L
-L106LL0000LL661L
-L100LL0000LL061L
-L160LL0000LL001L
-L166LL0000LL601L
-L106LL0000LL661L
-L100LL0000LL061L
-L160LL0000LL001L
-L166LL0000LL601L
-L106LL0000LL661L
-LLLLLLLLLLLLLLLL`]); }, 300);
-  setTimeout(() => {
-    setLegend(
-      [annoyer_falling, bitmap`
-................
-..8888HHHHHHHH..
-.88HHHHHHHHHHHH.
-.8HHHHHHHHHHHHH.
-.HHH2HHHHHH2HHH.
-.HH222HHHH222HH.
-.HH2L2HHHH2L2HH.
-.HH2L2HHHH2L2HH.
-.HH222HHHH222HH.
-.HHH2HHHHHH2HHH.
-.HHHHHHHHHHHHH8.
-.HHHHHHHHHHHHH8.
-.HHHHHHHHHHHHH8.
-.HHHHHHHHHHHH88.
-..HHHHHHHH8888..
-................`],
-      [trapdoor, bitmap`
-11LLLLLLLLLLLLLL
-166LL000000LL60L
-L06LL000000LL66L
-L00LL000000LL06L
-L60LL000000LL00L
-L66LL000000LL60L
-L06LL000000LL66L
-L00LL000000LL06L
-L60LL000000LL00L
-L66LL000000LL60L
-L06LL000000LL66L
-L00LL000000LL06L
-L60LL000000LL00L
-L66LL000000LL60L
-L06LL000000LL66L
-LLLLLLLLLLLLLLLL`]
-    );
-  }, 400);
-  setTimeout(() => {
-    setLegend(
-      [annoyer_falling, bitmap`
-................
-................
-...88HHHHHHHH...
-..88HHHHHHHHHH..
-..8HHHHHHHHHHH..
-..HH2HHHHHH2HH..
-..H2L2HHHH2L2H..
-..H2L2HHHH2L2H..
-..HH2HHHHHH2HH..
-..HHHHHHHHHHHH..
-..HHHHHHHHHHHH..
-..HHHHHHHHHHH8..
-..HHHHHHHHHH88..
-...HHHHHHHH88...
-................
-................`],
-      [trapdoor, bitmap`
-11LLLLLLLLLLLLLL
-166LL000000LL60L
-L06LL000000LL66L
-L00LL000000LL06L
-L60LL000000LL00L
-L66LL000000LL60L
-L06LL000000LL66L
-L00LL000000LL06L
-L60LL000000LL00L
-L66LL000000LL60L
-L06LL000000LL66L
-L00LL000000LL06L
-L60LL000000LL00L
-L66LL000000LL60L
-L06LL000000LL66L
-LLLLLLLLLLLLLLLL`]
-    );
-  }, 500);
-  setTimeout(() => {
-    setLegend(
-      [annoyer_falling, bitmap`
-................
-................
-....88HHHHHH....
-...8HHHHHHHHH...
-..8HHHHHHHHHHH..
-..8H2L2HH2L2HH..
-..HH2L2HH2L2HH..
-..HH2L2HH2L2HH..
-..HH2L2HH2L2HH..
-..HHHHHHHHHHHH..
-..HHHHHHHHHHH8..
-..HHHHHHHHHHH8..
-...HHHHHHHHH8...
-....HHHHHH88....
-................
-................`],
-      [trapdoor, bitmap`
-11LLLLLLLLLLLLLL
-16LL00000000LL6L
-L6LL00000000LL6L
-L0LL00000000LL0L
-L0LL00000000LL0L
-L6LL00000000LL6L
-L6LL00000000LL6L
-L0LL00000000LL0L
-L0LL00000000LL0L
-L6LL00000000LL6L
-L6LL00000000LL6L
-L0LL00000000LL0L
-L0LL00000000LL0L
-L6LL00000000LL6L
-L6LL00000000LL6L
-LLLLLLLLLLLLLLLL`]
-    );
-  }, 600);
-  setTimeout(() => {
-    setLegend(
-      [annoyer_falling, bitmap`
-................
-................
-................
-................
-....88HHHHHH....
-....8HHHHHHH....
-....H22HH22H....
-....HLLHHLLH....
-....H22HH22H....
-....HHHHHHHH....
-....HHHHHHH8....
-....HHHHHH88....
-................
-................
-................
-................`],
-      [trapdoor, bitmap`
-11LLLLLLLLLLLLLL
-16LL00000000LL6L
-L6LL00000000LL6L
-L0LL00000000LL0L
-L0LL00000000LL0L
-L6LL00000000LL6L
-L6LL00000000LL6L
-L0LL00000000LL0L
-L0LL00000000LL0L
-L6LL00000000LL6L
-L6LL00000000LL6L
-L0LL00000000LL0L
-L0LL00000000LL0L
-L6LL00000000LL6L
-L6LL00000000LL6L
-LLLLLLLLLLLLLLLL`]);
-  }, 700);
-  setTimeout(() => {
-    setLegend(
-      [annoyer_falling, bitmap`
-................
-................
-................
-................
-................
-................
-......HHHH......
-......HL2H......
-......HHHH......
-......HHHH......
-................
-................
-................
-................
-................
-................`],
-      [trapdoor, bitmap`
-11LLLLLLLLLLLLLL
-1LL0000000000LLL
-LLL0000000000LLL
-LLL0000000000LLL
-LLL0000000000LLL
-LLL0000000000LLL
-LLL0000000000LLL
-LLL0000000000LLL
-LLL0000000000LLL
-LLL0000000000LLL
-LLL0000000000LLL
-LLL0000000000LLL
-LLL0000000000LLL
-LLL0000000000LLL
-LLL0000000000LLL
-LLLLLLLLLLLLLLLL`]
-    );
-  }, 800);
-  setTimeout(() => {
-    setLegend(
-      [annoyer_falling, bitmap`
-................
-................
-................
-................
-................
-................
-................
-.......H1.......
-.......HH.......
-................
-................
-................
-................
-................
-................
-................`],
-      [trapdoor, bitmap`
-11LLLLLLLLLLLLLL
-1L000000000000LL
-LL000000000000LL
-LL000000000000LL
-LL000000000000LL
-LL000000000000LL
-LL000000000000LL
-LL000000000000LL
-LL000000000000LL
-LL000000000000LL
-LL000000000000LL
-LL000000000000LL
-LL000000000000LL
-LL000000000000LL
-LL000000000000LL
-LLLLLLLLLLLLLLLL`]
-    );
-  }, 900);
-  setTimeout(() => {
-    setLegend(
-      [annoyer_falling, bitmap`
-................
-................
-................
-................
-................
-................
-................
-................
-................
-................
-................
-................
-................
-................
-................
-................`],
-      [trapdoor, bitmap`
-11LLLLLLLLLLLLLL
-100000000000000L
-L00000000000000L
-L00000000000000L
-L00000000000000L
-L00000000000000L
-L00000000000000L
-L00000000000000L
-L00000000000000L
-L00000000000000L
-L00000000000000L
-L00000000000000L
-L00000000000000L
-L00000000000000L
-L00000000000000L
-LLLLLLLLLLLLLLLL`]
-    );
-    var fallers = getAll(annoyer_falling);
-    fallers.forEach((faller) => {
-      faller.remove();
-    })
-  }, 1000);
+    switch (gameState) {
+    case "game":
+        gameState = "trapdoors"
 
-  let annoyers = getAll(annoyer)
-  let trapdoors = getAll(trapdoor)
-  let player_inst = getFirst(player)
-  trapdoors.forEach((trapdoor) => {
-    if (trapdoor.x == player_inst.x && trapdoor.y == player_inst.y) {
-      gameover = true;
+        // Play the animations for the trapdoor and annoyers.
+        setTimeout(() => { setLegend([trapdoor, bitmap`
+      LLLLLLLLLLLLLLLL
+      L11166LLLL60111L
+      L11106LLLL66111L
+      L11100LLLL06111L
+      L11160LLLL00111L
+      L11166LLLL60111L
+      L11106LLLL66111L
+      L11100LLLL06111L
+      L11160LLLL00111L
+      L11166LLLL60111L
+      L11106LLLL66111L
+      L11100LLLL06111L
+      L11160LLLL00111L
+      L11166LLLL60111L
+      L11106LLLL66111L
+      LLLLLLLLLLLLLLLL`]); }, 100);
+        setTimeout(() => { setLegend([trapdoor, bitmap`
+      LLLLLLLLLLLLLLLL
+      L1166LL00LL6011L
+      L1106LL00LL6611L
+      L1100LL00LL0611L
+      L1160LL00LL0011L
+      L1166LL00LL6011L
+      L1106LL00LL6611L
+      L1100LL00LL0611L
+      L1160LL00LL0011L
+      L1166LL00LL6011L
+      L1106LL00LL6611L
+      L1100LL00LL0611L
+      L1160LL00LL0011L
+      L1166LL00LL6011L
+      L1106LL00LL6611L
+      LLLLLLLLLLLLLLLL`]); }, 200);
+        setTimeout(() => { setLegend([trapdoor, bitmap`
+      LLLLLLLLLLLLLLLL
+      L166LL0000LL601L
+      L106LL0000LL661L
+      L100LL0000LL061L
+      L160LL0000LL001L
+      L166LL0000LL601L
+      L106LL0000LL661L
+      L100LL0000LL061L
+      L160LL0000LL001L
+      L166LL0000LL601L
+      L106LL0000LL661L
+      L100LL0000LL061L
+      L160LL0000LL001L
+      L166LL0000LL601L
+      L106LL0000LL661L
+      LLLLLLLLLLLLLLLL`]); }, 300);
+        setTimeout(() => {
+          setLegend(
+            [annoyer_falling, bitmap`
+      ................
+      ..8888HHHHHHHH..
+      .88HHHHHHHHHHHH.
+      .8HHHHHHHHHHHHH.
+      .HHH2HHHHHH2HHH.
+      .HH222HHHH222HH.
+      .HH2L2HHHH2L2HH.
+      .HH2L2HHHH2L2HH.
+      .HH222HHHH222HH.
+      .HHH2HHHHHH2HHH.
+      .HHHHHHHHHHHHH8.
+      .HHHHHHHHHHHHH8.
+      .HHHHHHHHHHHHH8.
+      .HHHHHHHHHHHH88.
+      ..HHHHHHHH8888..
+      ................`],
+            [trapdoor, bitmap`
+      11LLLLLLLLLLLLLL
+      166LL000000LL60L
+      L06LL000000LL66L
+      L00LL000000LL06L
+      L60LL000000LL00L
+      L66LL000000LL60L
+      L06LL000000LL66L
+      L00LL000000LL06L
+      L60LL000000LL00L
+      L66LL000000LL60L
+      L06LL000000LL66L
+      L00LL000000LL06L
+      L60LL000000LL00L
+      L66LL000000LL60L
+      L06LL000000LL66L
+      LLLLLLLLLLLLLLLL`]
+          );
+        }, 400);
+        setTimeout(() => {
+          setLegend(
+            [annoyer_falling, bitmap`
+      ................
+      ................
+      ...88HHHHHHHH...
+      ..88HHHHHHHHHH..
+      ..8HHHHHHHHHHH..
+      ..HH2HHHHHH2HH..
+      ..H2L2HHHH2L2H..
+      ..H2L2HHHH2L2H..
+      ..HH2HHHHHH2HH..
+      ..HHHHHHHHHHHH..
+      ..HHHHHHHHHHHH..
+      ..HHHHHHHHHHH8..
+      ..HHHHHHHHHH88..
+      ...HHHHHHHH88...
+      ................
+      ................`],
+            [trapdoor, bitmap`
+      11LLLLLLLLLLLLLL
+      166LL000000LL60L
+      L06LL000000LL66L
+      L00LL000000LL06L
+      L60LL000000LL00L
+      L66LL000000LL60L
+      L06LL000000LL66L
+      L00LL000000LL06L
+      L60LL000000LL00L
+      L66LL000000LL60L
+      L06LL000000LL66L
+      L00LL000000LL06L
+      L60LL000000LL00L
+      L66LL000000LL60L
+      L06LL000000LL66L
+      LLLLLLLLLLLLLLLL`]
+          );
+        }, 500);
+        setTimeout(() => {
+          setLegend(
+            [annoyer_falling, bitmap`
+      ................
+      ................
+      ....88HHHHHH....
+      ...8HHHHHHHHH...
+      ..8HHHHHHHHHHH..
+      ..8H2L2HH2L2HH..
+      ..HH2L2HH2L2HH..
+      ..HH2L2HH2L2HH..
+      ..HH2L2HH2L2HH..
+      ..HHHHHHHHHHHH..
+      ..HHHHHHHHHHH8..
+      ..HHHHHHHHHHH8..
+      ...HHHHHHHHH8...
+      ....HHHHHH88....
+      ................
+      ................`],
+            [trapdoor, bitmap`
+      11LLLLLLLLLLLLLL
+      16LL00000000LL6L
+      L6LL00000000LL6L
+      L0LL00000000LL0L
+      L0LL00000000LL0L
+      L6LL00000000LL6L
+      L6LL00000000LL6L
+      L0LL00000000LL0L
+      L0LL00000000LL0L
+      L6LL00000000LL6L
+      L6LL00000000LL6L
+      L0LL00000000LL0L
+      L0LL00000000LL0L
+      L6LL00000000LL6L
+      L6LL00000000LL6L
+      LLLLLLLLLLLLLLLL`]
+          );
+        }, 600);
+        setTimeout(() => {
+          setLegend(
+            [annoyer_falling, bitmap`
+      ................
+      ................
+      ................
+      ................
+      ....88HHHHHH....
+      ....8HHHHHHH....
+      ....H22HH22H....
+      ....HLLHHLLH....
+      ....H22HH22H....
+      ....HHHHHHHH....
+      ....HHHHHHH8....
+      ....HHHHHH88....
+      ................
+      ................
+      ................
+      ................`],
+            [trapdoor, bitmap`
+      11LLLLLLLLLLLLLL
+      16LL00000000LL6L
+      L6LL00000000LL6L
+      L0LL00000000LL0L
+      L0LL00000000LL0L
+      L6LL00000000LL6L
+      L6LL00000000LL6L
+      L0LL00000000LL0L
+      L0LL00000000LL0L
+      L6LL00000000LL6L
+      L6LL00000000LL6L
+      L0LL00000000LL0L
+      L0LL00000000LL0L
+      L6LL00000000LL6L
+      L6LL00000000LL6L
+      LLLLLLLLLLLLLLLL`]);
+        }, 700);
+        setTimeout(() => {
+          setLegend(
+            [annoyer_falling, bitmap`
+      ................
+      ................
+      ................
+      ................
+      ................
+      ................
+      ......HHHH......
+      ......HL2H......
+      ......HHHH......
+      ......HHHH......
+      ................
+      ................
+      ................
+      ................
+      ................
+      ................`],
+            [trapdoor, bitmap`
+      11LLLLLLLLLLLLLL
+      1LL0000000000LLL
+      LLL0000000000LLL
+      LLL0000000000LLL
+      LLL0000000000LLL
+      LLL0000000000LLL
+      LLL0000000000LLL
+      LLL0000000000LLL
+      LLL0000000000LLL
+      LLL0000000000LLL
+      LLL0000000000LLL
+      LLL0000000000LLL
+      LLL0000000000LLL
+      LLL0000000000LLL
+      LLL0000000000LLL
+      LLLLLLLLLLLLLLLL`]
+          );
+        }, 800);
+        setTimeout(() => {
+          setLegend(
+            [annoyer_falling, bitmap`
+      ................
+      ................
+      ................
+      ................
+      ................
+      ................
+      ................
+      .......H1.......
+      .......HH.......
+      ................
+      ................
+      ................
+      ................
+      ................
+      ................
+      ................`],
+            [trapdoor, bitmap`
+      11LLLLLLLLLLLLLL
+      1L000000000000LL
+      LL000000000000LL
+      LL000000000000LL
+      LL000000000000LL
+      LL000000000000LL
+      LL000000000000LL
+      LL000000000000LL
+      LL000000000000LL
+      LL000000000000LL
+      LL000000000000LL
+      LL000000000000LL
+      LL000000000000LL
+      LL000000000000LL
+      LL000000000000LL
+      LLLLLLLLLLLLLLLL`]
+          );
+        }, 900);
+        setTimeout(() => {
+          setLegend(
+            [annoyer_falling, bitmap`
+      ................
+      ................
+      ................
+      ................
+      ................
+      ................
+      ................
+      ................
+      ................
+      ................
+      ................
+      ................
+      ................
+      ................
+      ................
+      ................`],
+            [trapdoor, bitmap`
+      11LLLLLLLLLLLLLL
+      100000000000000L
+      L00000000000000L
+      L00000000000000L
+      L00000000000000L
+      L00000000000000L
+      L00000000000000L
+      L00000000000000L
+      L00000000000000L
+      L00000000000000L
+      L00000000000000L
+      L00000000000000L
+      L00000000000000L
+      L00000000000000L
+      L00000000000000L
+      LLLLLLLLLLLLLLLL`]
+          );
+          var fallers = getAll(annoyer_falling);
+          fallers.forEach((faller) => {
+            faller.remove();
+          })
+        }, 1000);
+
+        // after 1.5 seconds, display the appropriate gameover text.
+                setTimeout(() => {
+          gameState = "gameover";
+          if (player_dead) {
+            addText("You died!", { x: 0, y: 0, color: color`3` })
+            addText("Press J to restart.", { x: 0, y: 1, color: color`3` })
+          } else if (getAll(annoyer).length > 0) {
+            addText("You lost!", { x: 0, y: 0, color: color`3` })
+            addText("Press J to restart.", { x: 0, y: 1, color: color`3` })
+          } else {
+            addText("You win!", { x: 0, y: 0, color: color`4` })
+            addText("Press L to continue.", { x: 0, y: 1, color: color`3` })
+          }
+        }, 1500);
+      
+        let annoyers = getAll(annoyer)
+        let trapdoors = getAll(trapdoor)
+        let player_inst = getFirst(player)
+        
+        trapdoors.forEach((trapdoor) => {
+          if (trapdoor.x == player_inst.x && trapdoor.y == player_inst.y) {
+            player_dead = true;
+          }
+          annoyers.forEach((annoyer) => {
+            if (annoyer.x == trapdoor.x && annoyer.y == trapdoor.y) {
+              addSprite(annoyer.x, annoyer.y, annoyer_falling);
+              setTimeout(() => {
+                annoyer.remove();
+                annoyers.splice(annoyers.indexOf(annoyer), 1);
+              }, 450);
+            }
+          });
+        })
+        break;
     }
-    annoyers.forEach((annoyer) => {
-      if (annoyer.x == trapdoor.x && annoyer.y == trapdoor.y) {
-        addSprite(annoyer.x, annoyer.y, annoyer_falling);
-        setTimeout(() => { annoyer.remove();
-          annoyers.splice(annoyers.indexOf(annoyer), 1); }, 450);
-      }
-    });
-  })
 });
 
 let movetimer = 0;
 afterInput(() => {
-  if (trapdoor_move_used) {
-    gameState = "nextlevel";
-      setTimeout(() => {
-      if (gameover) {
-        addText("You died!", { x: 0 ,y: 0, color: color`3`})
-        addText("Press J to restart.", { x: 0 ,y: 1, color: color`3`})
-      }else if (getAll(annoyer).length > 0) {
-        addText("You lost!", { x: 0,y: 0,color: color`3`})
-        addText("Press J to restart.", { x: 0 ,y: 1, color: color`3`})
-      }else {
-         addText("You win!", { x: 0,y: 0,color: color`4`})
-        addText("Press L to continue.", { x: 0 ,y: 1, color: color`3`})
-      }
-      }, 1000);
-  }
-  if (last_move_was_trapdoor) { return }
-  movetimer++;
-  if (movetimer == 2) {
-    moveAnnoyers();
-    movetimer = 0;
-  }
+  
 })
 
 function moveAnnoyers() {
