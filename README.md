@@ -1,3 +1,3 @@
-# RAGE is a function of time over results.
+# step-step
 
 A game for the [Sprig](https://sprig.hackclub.com).
