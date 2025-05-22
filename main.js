@@ -1,29 +1,29 @@
 /*
-@title: RAGE is a function of time over results
+@title: step-step
 @author: Edward Hesketh
 @tags: []
 @addedOn: 2024-00-00
 */
 
-const background_none = '0'
-const background_tile = '1'
-const background_wall_top = '2'
-const background_wall_right = '3'
-const background_wall_bottom = '4'
-const background_wall_left = '5'
-const background_wall_TL = '6'
-const background_wall_TR = '7'
-const background_wall_BL = '8'
-const background_wall_BR = '9'
+const trapdoor = 'a'
+const player = 'b'
+const annoyer = 'c'
+const annoyer_falling = 'd'
+const wall = 'e'
+const background_tile = 'j'
 
-const trapdoor = 't'
-const player = 'p'
-const annoyer = 'a'
-const annoyer_falling = 'f'
-const wall = 'w'
+const button_outline = 'h'
 
-setLegend(
-  [player, bitmap`
+const button_filled_w = 'k'
+const button_filled_a = 'l'
+const button_filled_s = 'm'
+const button_filled_d = 'n'
+
+const button_filled = 'o'
+
+function resetLegend() {
+    setLegend(
+      [player, bitmap`
 3333333333333333
 333LL333333LL333
 33L3333333333L33
@@ -40,7 +40,7 @@ setLegend(
 333333LLLL33333C
 333333333333333C
 333333CCCCCCCCCC`],
-  [annoyer, bitmap`
+      [annoyer, bitmap`
 ..88888HHHHHHH..
 .8HHHHHHHHHHHHH.
 8HHHHHHHHHHHHHHH
@@ -57,7 +57,7 @@ HHHHHHHHHHHHHHH8
 HHHHHHHHHHHHHH88
 .HHHHHHHHHHHH88.
 ..HHHHHHH88888..`],
-  [annoyer_falling, bitmap`
+      [annoyer_falling, bitmap`
 ................
 ................
 ................
@@ -74,7 +74,7 @@ HHHHHHHHHHHHHH88
 ................
 ................
 ................`],
-  [trapdoor, bitmap`
+      [trapdoor, bitmap`
 LLLLLLLLLLLLLLLL
 L111166LL601111L
 L111106LL661111L
@@ -91,7 +91,7 @@ L111160LL001111L
 L111166LL601111L
 L111106LL661111L
 LLLLLLLLLLLLLLLL`],
-  [wall, bitmap`
+      [wall, bitmap`
 0000000000000000
 0000000000000000
 0000000000000000
@@ -108,220 +108,251 @@ LLLLLLLLLLLLLLLL`],
 0000000000000000
 0000000000000000
 0000000000000000`],
-  [background_wall_top, bitmap`
-2222222222222222
-1000000000000001
-1000000000000001
-L00000000000000L
-L00000000000000L
-L00000000000000L
-L00000000000000L
-L00000000000000L
-L00000000000000L
-L00000000000000L
-L00000000000000L
-L00000000000000L
-L00000000000000L
-L00000000000000L
-L00000000000000L
-LLLLLLLLLLLLLLLL`],
-  [background_wall_right, bitmap`
-11LLLLLLLLLLL112
-1000000000000002
-L000000000000002
-L000000000000002
-L000000000000002
-L000000000000002
-L000000000000002
-L000000000000002
-L000000000000002
-L000000000000002
-L000000000000002
-L000000000000002
-L000000000000002
-L000000000000002
-L000000000000002
-LLLLLLLLLLLLL112`],
-  [background_wall_bottom, bitmap`
-11LLLLLLLLLLLLLL
-100000000000000L
-L00000000000000L
-L00000000000000L
-L00000000000000L
-L00000000000000L
-L00000000000000L
-L00000000000000L
-L00000000000000L
-L00000000000000L
-L00000000000000L
-L00000000000000L
-L00000000000000L
-1000000000000001
-1000000000000001
-2222222222222222`],
-  [background_wall_left, bitmap`
-211LLLLLLLLLLLLL
-200000000000000L
-200000000000000L
-200000000000000L
-200000000000000L
-200000000000000L
-200000000000000L
-200000000000000L
-200000000000000L
-200000000000000L
-200000000000000L
-200000000000000L
-200000000000000L
-200000000000000L
-200000000000000L
-211LLLLLLLLLLLLL`],
-  [background_wall_TL, bitmap`
-2222222222222222
-2000000000000001
-2000000000000001
-200000000000000L
-200000000000000L
-200000000000000L
-200000000000000L
-200000000000000L
-200000000000000L
-200000000000000L
-200000000000000L
-200000000000000L
-200000000000000L
-200000000000000L
-200000000000000L
-211LLLLLLLLLLLLL`],
-  [background_wall_TR, bitmap`
-2222222222222222
-1000000000000002
-1000000000000002
-L000000000000002
-L000000000000002
-L000000000000002
-L000000000000002
-L000000000000002
-L000000000000002
-L000000000000002
-L000000000000002
-L000000000000002
-L000000000000002
-L000000000000002
-L000000000000002
-LLLLLLLLLLLLL112`],
-  [background_wall_BL, bitmap`
-211LLLLLLLLLLLLL
-200000000000000L
-200000000000000L
-200000000000000L
-200000000000000L
-200000000000000L
-200000000000000L
-200000000000000L
-200000000000000L
-200000000000000L
-200000000000000L
-200000000000000L
-200000000000000L
-2000000000000001
-2000000000000001
-2222222222222222`],
-  [background_wall_BR, bitmap`
-11LLLLLLLLLLL112
-1000000000000002
-L000000000000002
-L000000000000002
-L000000000000002
-L000000000000002
-L000000000000002
-L000000000000002
-L000000000000002
-L000000000000002
-L000000000000002
-L000000000000002
-L000000000000002
-1000000000000002
-1000000000000002
-2222222222222222`],
-  [background_tile, bitmap`
-11LLLLLLLLLLLLLL
-100000000000000L
-L00000000000000L
-L00000000000000L
-L00000000000000L
-L00000000000000L
-L00000000000000L
-L00000000000000L
-L00000000000000L
-L00000000000000L
-L00000000000000L
-L00000000000000L
-L00000000000000L
-L00000000000000L
-L00000000000000L
-LLLLLLLLLLLLLLLL`],
-  [background_none, bitmap`
+      [button_outline, bitmap`
 0000000000000000
 0000000000000000
-0000000000000000
-0000000000000000
-0000000000000000
-0000000000000000
-0000000000000000
-0000000000000000
-0000000000000000
-0000000000000000
-0000000000000000
-0000000000000000
-0000000000000000
-0000000000000000
+0000022222200000
+000222LLLL222000
+0002LLLLLLLL2000
+0022LLLLLLLL2200
+002LLLLLLLLLL200
+002LLLLLLLLLL200
+002LLLLLLLLLL200
+002LLLLLLLLLL200
+0022LLLLLLLL2200
+0002LLLLLLLL2000
+000222LLLL222000
+0000022222200000
 0000000000000000
 0000000000000000`],
-)
-
-setSolids([player, annoyer, wall])
-
-function loadLevel(levelIndex) {
-  setMap(levels[levelIndex])
-  switch (levelIndex) {
-    case 0:
-      addSprite(0, 0, player)
-      addSprite(5, 5, annoyer)
-      addSprite(4, 5, annoyer)
-      break;
-    default:
-      console.log("error: loading undefined level")
-  }
+      [background_tile, bitmap`
+1111111111111111
+100000000000000L
+100000000000000L
+100000000000000L
+100000000000000L
+100000000000000L
+100000000000000L
+100000000000000L
+100000000000000L
+100000000000000L
+100000000000000L
+100000000000000L
+100000000000000L
+100000000000000L
+100000000000000L
+1LLLLLLLLLLLLLLL`],
+      [button_filled_w, bitmap`
+0000000000000000
+0000000000000000
+0000022222200000
+0002222LL2222000
+000222LLLL222000
+00222LLLLLL22200
+0022LLLLLLLL2200
+0022222LL2222200
+0022222LL2222200
+0022222LL2222200
+0022222LL2222200
+0002222LL2222000
+0002222LL2222000
+0000022222200000
+0000000000000000
+0000000000000000`],
+      [button_filled_a, bitmap`
+0000000000000000
+0000000000000000
+0000022222200000
+0002222222222000
+000222L222222000
+00222LL222222200
+0022LLL222222200
+002LLLLLLLLLL200
+002LLLLLLLLLL200
+0022LLL222222200
+00222LL222222200
+000222L222222000
+0002222222222000
+0000022222200000
+0000000000000000
+0000000000000000`],
+      [button_filled_s, bitmap`
+0000000000000000
+0000000000000000
+0000022222200000
+0002222LL2222000
+0002222LL2222000
+0022222LL2222200
+0022222LL2222200
+0022222LL2222200
+0022222LL2222200
+0022LLLLLLLL2200
+00222LLLLLL22200
+000222LLLL222000
+0002222LL2222000
+0000022222200000
+0000000000000000
+0000000000000000`],
+      [button_filled_d, bitmap`
+0000000000000000
+0000000000000000
+0000022222200000
+0002222222222000
+000222222L222000
+002222222LL22200
+002222222LLL2200
+002LLLLLLLLLL200
+002LLLLLLLLLL200
+002222222LLL2200
+002222222LL22200
+000222222L222000
+0002222222222000
+0000022222200000
+0000000000000000
+0000000000000000`],
+      [button_filled, bitmap`
+0000000000000000
+0000000000000000
+0000022222200000
+0002222222222000
+0002222222222000
+0022222222222200
+0022222222222200
+0022222222222200
+0022222222222200
+0022222222222200
+0022222222222200
+0002222222222000
+0002222222222000
+0000022222200000
+0000000000000000
+0000000000000000`],
+    )
 }
 
-let level = 0
-const levels = [
-  map`
-6222222227
-5wwwwwwww3
-5w111111w3
-5wwwwwwww3
-5wwwwwwww3
-5wt11111w3
-5wwwwwwww3
-8444444449`,
-]
-loadLevel(level)
+resetLegend()
+
+setBackground(background_tile)
+
+setSolids([player, annoyer, wall])
 
 let gameover = false;
 let player_dead = false;
 var gameState = "game";
+let tutorialIndex = 0;
+let win = false;
+
+function loadLevel(levelIndex) {
+          resetLegend()
+  clearText()
+  setMap(levels[levelIndex])
+    tutorialIndex = 2;
+  switch (levelIndex) {
+    case 0:
+      break
+    case 1:
+      gameState = "game";
+      tutorialIndex = 0;
+      addText("WASD for\nmovement", {
+        x: 10,
+        y: 4,
+        color: color`3`
+      })
+      break;
+    default:
+        gameState = "game";
+  }
+}
+
+let level = 1
+const levels = [
+  map`
+eeeeeeeeee
+eeeeeeeeee
+eeeeeeehee
+eeeeeehehe
+eeeeeeehee
+eeeeeeeeee
+eeeeeeeeee
+eeeeeeeeee`,
+  map`
+eeeeeeeeee
+eekeeeeeee
+eleneeeeee
+eemeeeeeee
+eeeeeeeeee
+....ea....
+.b..ea...c
+....ea....`,
+  map`
+eeeeeeeeee
+.b......a.
+.eeeeeeee.
+.eeeeeeee.
+.eeeeeeee.
+.eeeeeeee.
+ceeeeeeee.
+eeeeeeeeee`,
+  map`
+eeeeeeeeee
+eeeeeeeeee
+ec.eeaae.e
+ec.eeaae.e
+ec...aae.e
+eeeeeeee.e
+eeb......e
+eeeeeeeeee`,
+]
+loadLevel(level)
+
+let playermovesPerEnemyMove = 1;
+
+function afterPlayerMovement() {
+  movetimer++;
+  if (movetimer == playermovesPerEnemyMove && tutorialIndex != 0) {
+    moveAnnoyers();
+    movetimer = 0;
+  }
+  if (movetimer == 5 && tutorialIndex == 0) {
+    addSprite(2, 1, wall)
+    addSprite(3, 2, wall)
+    addSprite(1, 2, wall)
+    addSprite(2, 3, wall)
+    clearText()
+    addText("   enemies\nfollow you", {
+      x: 10,
+      y: 7,
+      color: color`H`
+    })
+    tutorialIndex++;
+    movetimer = playermovesPerEnemyMove-1;
+  }
+  if (tutorialIndex == 1 && getFirst(trapdoor).x == getFirst(annoyer).x) {
+    clearText()
+    addText("lure them\nover\ntrapdoors\n\nand kill\nwith K", {
+      x: 1,
+      y: 2,
+      color: color`6`
+    })
+    clearTile(7, 1)
+    clearTile(8, 2)
+    clearTile(6, 2)
+    clearTile(7, 3)
+
+    addSprite(7, 1, button_outline)
+    addSprite(8, 2, button_outline)
+    addSprite(6, 2, button_outline)
+    addSprite(7, 3, button_filled)
+    tutorialIndex++
+  }
+}
 
 // Player movement
 onInput("w", () => {
   switch (gameState) {
     case "game":
-      getFirst(player).y -= 1
-      movetimer++;
-      if (movetimer == 2) {
-        moveAnnoyers();
-        movetimer = 0;
+      if (getFirst(player).y-- != getFirst(player).y) {
+        afterPlayerMovement();
       }
       break;
   }
@@ -329,11 +360,8 @@ onInput("w", () => {
 onInput("a", () => {
   switch (gameState) {
     case "game":
-      getFirst(player).x -= 1
-      movetimer++;
-      if (movetimer == 2) {
-        moveAnnoyers();
-        movetimer = 0;
+      if (getFirst(player).x-- != getFirst(player).x) {
+        afterPlayerMovement();
       }
       break;
   }
@@ -341,11 +369,8 @@ onInput("a", () => {
 onInput("s", () => {
   switch (gameState) {
     case "game":
-      getFirst(player).y += 1
-      movetimer++;
-      if (movetimer == 2) {
-        moveAnnoyers();
-        movetimer = 0;
+      if (getFirst(player).y++ != getFirst(player).y) {
+        afterPlayerMovement();
       }
       break;
   }
@@ -353,11 +378,8 @@ onInput("s", () => {
 onInput("d", () => {
   switch (gameState) {
     case "game":
-      getFirst(player).x += 1
-      movetimer++;
-      if (movetimer == 2) {
-        moveAnnoyers();
-        movetimer = 0;
+      if (getFirst(player).x++ != getFirst(player).x) {
+        afterPlayerMovement();
       }
       break;
   }
@@ -367,14 +389,24 @@ onInput("j", () => {
   loadLevel(level)
 })
 
+onInput("l", () => {
+  if (gameState=="gameover" && win) {
+    win = false;
+    loadLevel(++level)
+  }
+})
+
 // Open the trapdoors!
 onInput("k", () => {
-    switch (gameState) {
+  if (tutorialIndex < 2) {
+    return
+  }
+  switch (gameState) {
     case "game":
-        gameState = "trapdoors"
+      gameState = "trapdoors"
 
-        // Play the animations for the trapdoor and annoyers.
-        setTimeout(() => { setLegend([trapdoor, bitmap`
+      // Play the animations for the trapdoor and annoyers.
+      setTimeout(() => { setLegend([trapdoor, bitmap`
       LLLLLLLLLLLLLLLL
       L11166LLLL60111L
       L11106LLLL66111L
@@ -391,7 +423,7 @@ onInput("k", () => {
       L11166LLLL60111L
       L11106LLLL66111L
       LLLLLLLLLLLLLLLL`]); }, 100);
-        setTimeout(() => { setLegend([trapdoor, bitmap`
+      setTimeout(() => { setLegend([trapdoor, bitmap`
       LLLLLLLLLLLLLLLL
       L1166LL00LL6011L
       L1106LL00LL6611L
@@ -408,7 +440,7 @@ onInput("k", () => {
       L1166LL00LL6011L
       L1106LL00LL6611L
       LLLLLLLLLLLLLLLL`]); }, 200);
-        setTimeout(() => { setLegend([trapdoor, bitmap`
+      setTimeout(() => { setLegend([trapdoor, bitmap`
       LLLLLLLLLLLLLLLL
       L166LL0000LL601L
       L106LL0000LL661L
@@ -425,9 +457,9 @@ onInput("k", () => {
       L166LL0000LL601L
       L106LL0000LL661L
       LLLLLLLLLLLLLLLL`]); }, 300);
-        setTimeout(() => {
-          setLegend(
-            [annoyer_falling, bitmap`
+      setTimeout(() => {
+        setLegend(
+          [annoyer_falling, bitmap`
       ................
       ..8888HHHHHHHH..
       .88HHHHHHHHHHHH.
@@ -444,7 +476,7 @@ onInput("k", () => {
       .HHHHHHHHHHHH88.
       ..HHHHHHHH8888..
       ................`],
-            [trapdoor, bitmap`
+          [trapdoor, bitmap`
       11LLLLLLLLLLLLLL
       166LL000000LL60L
       L06LL000000LL66L
@@ -461,11 +493,11 @@ onInput("k", () => {
       L66LL000000LL60L
       L06LL000000LL66L
       LLLLLLLLLLLLLLLL`]
-          );
-        }, 400);
-        setTimeout(() => {
-          setLegend(
-            [annoyer_falling, bitmap`
+        );
+      }, 400);
+      setTimeout(() => {
+        setLegend(
+          [annoyer_falling, bitmap`
       ................
       ................
       ...88HHHHHHHH...
@@ -482,7 +514,7 @@ onInput("k", () => {
       ...HHHHHHHH88...
       ................
       ................`],
-            [trapdoor, bitmap`
+          [trapdoor, bitmap`
       11LLLLLLLLLLLLLL
       166LL000000LL60L
       L06LL000000LL66L
@@ -499,11 +531,11 @@ onInput("k", () => {
       L66LL000000LL60L
       L06LL000000LL66L
       LLLLLLLLLLLLLLLL`]
-          );
-        }, 500);
-        setTimeout(() => {
-          setLegend(
-            [annoyer_falling, bitmap`
+        );
+      }, 500);
+      setTimeout(() => {
+        setLegend(
+          [annoyer_falling, bitmap`
       ................
       ................
       ....88HHHHHH....
@@ -520,7 +552,7 @@ onInput("k", () => {
       ....HHHHHH88....
       ................
       ................`],
-            [trapdoor, bitmap`
+          [trapdoor, bitmap`
       11LLLLLLLLLLLLLL
       16LL00000000LL6L
       L6LL00000000LL6L
@@ -537,11 +569,11 @@ onInput("k", () => {
       L6LL00000000LL6L
       L6LL00000000LL6L
       LLLLLLLLLLLLLLLL`]
-          );
-        }, 600);
-        setTimeout(() => {
-          setLegend(
-            [annoyer_falling, bitmap`
+        );
+      }, 600);
+      setTimeout(() => {
+        setLegend(
+          [annoyer_falling, bitmap`
       ................
       ................
       ................
@@ -558,7 +590,7 @@ onInput("k", () => {
       ................
       ................
       ................`],
-            [trapdoor, bitmap`
+          [trapdoor, bitmap`
       11LLLLLLLLLLLLLL
       16LL00000000LL6L
       L6LL00000000LL6L
@@ -575,10 +607,10 @@ onInput("k", () => {
       L6LL00000000LL6L
       L6LL00000000LL6L
       LLLLLLLLLLLLLLLL`]);
-        }, 700);
-        setTimeout(() => {
-          setLegend(
-            [annoyer_falling, bitmap`
+      }, 700);
+      setTimeout(() => {
+        setLegend(
+          [annoyer_falling, bitmap`
       ................
       ................
       ................
@@ -595,7 +627,7 @@ onInput("k", () => {
       ................
       ................
       ................`],
-            [trapdoor, bitmap`
+          [trapdoor, bitmap`
       11LLLLLLLLLLLLLL
       1LL0000000000LLL
       LLL0000000000LLL
@@ -612,11 +644,11 @@ onInput("k", () => {
       LLL0000000000LLL
       LLL0000000000LLL
       LLLLLLLLLLLLLLLL`]
-          );
-        }, 800);
-        setTimeout(() => {
-          setLegend(
-            [annoyer_falling, bitmap`
+        );
+      }, 800);
+      setTimeout(() => {
+        setLegend(
+          [annoyer_falling, bitmap`
       ................
       ................
       ................
@@ -633,7 +665,7 @@ onInput("k", () => {
       ................
       ................
       ................`],
-            [trapdoor, bitmap`
+          [trapdoor, bitmap`
       11LLLLLLLLLLLLLL
       1L000000000000LL
       LL000000000000LL
@@ -650,11 +682,11 @@ onInput("k", () => {
       LL000000000000LL
       LL000000000000LL
       LLLLLLLLLLLLLLLL`]
-          );
-        }, 900);
-        setTimeout(() => {
-          setLegend(
-            [annoyer_falling, bitmap`
+        );
+      }, 900);
+      setTimeout(() => {
+        setLegend(
+          [annoyer_falling, bitmap`
       ................
       ................
       ................
@@ -671,87 +703,111 @@ onInput("k", () => {
       ................
       ................
       ................`],
-            [trapdoor, bitmap`
-      11LLLLLLLLLLLLLL
-      100000000000000L
-      L00000000000000L
-      L00000000000000L
-      L00000000000000L
-      L00000000000000L
-      L00000000000000L
-      L00000000000000L
-      L00000000000000L
-      L00000000000000L
-      L00000000000000L
-      L00000000000000L
-      L00000000000000L
-      L00000000000000L
-      L00000000000000L
-      LLLLLLLLLLLLLLLL`]
-          );
-          var fallers = getAll(annoyer_falling);
-          fallers.forEach((faller) => {
-            faller.remove();
-          })
-        }, 1000);
+          [trapdoor, bitmap`
+LLLLLLLLLLLLLLLL
+L00000000000000L
+L00000000000000L
+L00000000000000L
+L00000000000000L
+L00000000000000L
+L00000000000000L
+L00000000000000L
+L00000000000000L
+L00000000000000L
+L00000000000000L
+L00000000000000L
+L00000000000000L
+L00000000000000L
+L00000000000000L
+LLLLLLLLLLLLLLLL`]
+        );
+        var fallers = getAll(annoyer_falling);
+        fallers.forEach((faller) => {
+          faller.remove();
+        })
+      }, 1000);
 
         // after 1.5 seconds, display the appropriate gameover text.
-                setTimeout(() => {
+        setTimeout(() => {
           gameState = "gameover";
           if (player_dead) {
-            addText("You died!", { x: 0, y: 0, color: color`3` })
-            addText("Press J to restart.", { x: 0, y: 1, color: color`3` })
+                      loadLevel(0)
+            addText("you killed\nyourself\n\npress J to\ntry again", {
+              x: 2,
+              y: 5,
+              color: color`5`
+            })
+            player_dead=false
+            clearTile(6, 3)
+            addSprite(6, 3, button_filled)
           } else if (getAll(annoyer).length > 0) {
-            addText("You lost!", { x: 0, y: 0, color: color`3` })
-            addText("Press J to restart.", { x: 0, y: 1, color: color`3` })
+                      loadLevel(0)
+            addText("you missed\nenemies!\n\npress J to\ntry again", {
+              x: 2,
+              y: 5,
+              color: color`H`
+            })
+            clearTile(6, 3)
+            addSprite(6, 3, button_filled)
           } else {
-            addText("You win!", { x: 0, y: 0, color: color`4` })
-            addText("Press L to continue.", { x: 0, y: 1, color: color`3` })
+            loadLevel(0)
+            win = true;
+            addText("you win!\n\nuse L to\ncontinue", {
+              x: 2,
+              y: 5,
+              color: color`4`
+            })
+            addText("level " + String(level).padStart(2, '0') + " of 10", {
+              x: 3,
+              y: 14,
+              color: color`2`
+            })
+            clearTile(8, 3)
+            addSprite(8, 3, button_filled)
           }
         }, 1500);
-      
-        let annoyers = getAll(annoyer)
-        let trapdoors = getAll(trapdoor)
-        let player_inst = getFirst(player)
-        
-        trapdoors.forEach((trapdoor) => {
-          if (trapdoor.x == player_inst.x && trapdoor.y == player_inst.y) {
-            player_dead = true;
+      let annoyers = getAll(annoyer)
+      let trapdoors = getAll(trapdoor)
+      let player_inst = getFirst(player)
+
+      trapdoors.forEach((trapdoor) => {
+        if (trapdoor.x == player_inst.x && trapdoor.y == player_inst.y) {
+          player_dead = true;
+        }
+        annoyers.forEach((annoyer) => {
+          if (annoyer.x == trapdoor.x && annoyer.y == trapdoor.y) {
+            addSprite(annoyer.x, annoyer.y, annoyer_falling);
+            setTimeout(() => {
+              annoyer.remove();
+              annoyers.splice(annoyers.indexOf(annoyer), 1);
+            }, 450);
           }
-          annoyers.forEach((annoyer) => {
-            if (annoyer.x == trapdoor.x && annoyer.y == trapdoor.y) {
-              addSprite(annoyer.x, annoyer.y, annoyer_falling);
-              setTimeout(() => {
-                annoyer.remove();
-                annoyers.splice(annoyers.indexOf(annoyer), 1);
-              }, 450);
-            }
-          });
-        })
-        break;
-    }
+        });
+      })
+      break;
+  }
 });
 
 let movetimer = 0;
 afterInput(() => {
-  
+
 })
 
 function moveAnnoyers() {
   player_sprite = getFirst(player)
   annoyers = getAll(annoyer)
   annoyers.forEach((annoyer) => {
-    if (annoyer.x >= player_sprite.x) {
-      annoyer.x -= 1
+    if (annoyer.x > player_sprite.x && annoyer.x-- != annoyer.x) {
+      return;
     }
-    if (annoyer.x < player_sprite.x) {
-      annoyer.x += 1
+    if (annoyer.x < player_sprite.x && annoyer.x++ != annoyer.x) {
+      return;
     }
-    if (annoyer.y >= player_sprite.y) {
-      annoyer.y -= 1
+    if (annoyer.y > player_sprite.y && annoyer.y-- != annoyer.y) {
+      return;
     }
-    if (annoyer.y < player_sprite.y) {
-      annoyer.y += 1
+    if (annoyer.y < player_sprite.y && annoyer.y++ != annoyer.y) {
+      return;
     }
   });
 }
