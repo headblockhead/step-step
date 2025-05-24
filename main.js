@@ -22,8 +22,8 @@ const button_filled_d = 'n'
 const button_filled = 'o'
 
 function resetLegend() {
-    setLegend(
-      [player, bitmap`
+  setLegend(
+    [player, bitmap`
 3333333333333333
 333LL333333LL333
 33L3333333333L33
@@ -40,24 +40,24 @@ function resetLegend() {
 333333LLLL33333C
 333333333333333C
 333333CCCCCCCCCC`],
-      [annoyer, bitmap`
+    [annoyer, bitmap`
 ..88888HHHHHHH..
 .8HHHHHHHHHHHHH.
 8HHHHHHHHHHHHHHH
 HHHHHHHHHHHHHHHH
-HHHH2HHHHHH2HHHH
-HHH222HHHH222HHH
-HHH2L2HHHH2L2HHH
-HHH2L2HHHH2L2HHH
-HHH222HHHH222HHH
-HHHH2HHHHHH2HHH8
-HHHHHHHHHHHHHHH8
+HHHHHHHHHHHHHHHH
+HHH2HH2HH2HH2HHH
+HHH2222HH2222HHH
+HHH2LL2HH2LL2HHH
+HHH2LL2HH2LL2HHH
+HHH2222HH2222HH8
+HHHH22HHHH22HHH8
 HHHHHHHHHHHHHHH8
 HHHHHHHHHHHHHHH8
 HHHHHHHHHHHHHH88
 .HHHHHHHHHHHH88.
 ..HHHHHHH88888..`],
-      [annoyer_falling, bitmap`
+    [annoyer_falling, bitmap`
 ................
 ................
 ................
@@ -74,7 +74,7 @@ HHHHHHHHHHHHHH88
 ................
 ................
 ................`],
-      [trapdoor, bitmap`
+    [trapdoor, bitmap`
 LLLLLLLLLLLLLLLL
 L111166LL601111L
 L111106LL661111L
@@ -91,7 +91,7 @@ L111160LL001111L
 L111166LL601111L
 L111106LL661111L
 LLLLLLLLLLLLLLLL`],
-      [wall, bitmap`
+    [wall, bitmap`
 0000000000000000
 0000000000000000
 0000000000000000
@@ -108,7 +108,7 @@ LLLLLLLLLLLLLLLL`],
 0000000000000000
 0000000000000000
 0000000000000000`],
-      [button_outline, bitmap`
+    [button_outline, bitmap`
 0000000000000000
 0000000000000000
 0000022222200000
@@ -125,7 +125,7 @@ LLLLLLLLLLLLLLLL`],
 0000022222200000
 0000000000000000
 0000000000000000`],
-      [background_tile, bitmap`
+    [background_tile, bitmap`
 1111111111111111
 100000000000000L
 100000000000000L
@@ -142,7 +142,7 @@ LLLLLLLLLLLLLLLL`],
 100000000000000L
 100000000000000L
 1LLLLLLLLLLLLLLL`],
-      [button_filled_w, bitmap`
+    [button_filled_w, bitmap`
 0000000000000000
 0000000000000000
 0000022222200000
@@ -159,7 +159,7 @@ LLLLLLLLLLLLLLLL`],
 0000022222200000
 0000000000000000
 0000000000000000`],
-      [button_filled_a, bitmap`
+    [button_filled_a, bitmap`
 0000000000000000
 0000000000000000
 0000022222200000
@@ -176,7 +176,7 @@ LLLLLLLLLLLLLLLL`],
 0000022222200000
 0000000000000000
 0000000000000000`],
-      [button_filled_s, bitmap`
+    [button_filled_s, bitmap`
 0000000000000000
 0000000000000000
 0000022222200000
@@ -193,7 +193,7 @@ LLLLLLLLLLLLLLLL`],
 0000022222200000
 0000000000000000
 0000000000000000`],
-      [button_filled_d, bitmap`
+    [button_filled_d, bitmap`
 0000000000000000
 0000000000000000
 0000022222200000
@@ -210,7 +210,7 @@ LLLLLLLLLLLLLLLL`],
 0000022222200000
 0000000000000000
 0000000000000000`],
-      [button_filled, bitmap`
+    [button_filled, bitmap`
 0000000000000000
 0000000000000000
 0000022222200000
@@ -227,7 +227,7 @@ LLLLLLLLLLLLLLLL`],
 0000022222200000
 0000000000000000
 0000000000000000`],
-    )
+  )
 }
 
 resetLegend()
@@ -243,10 +243,10 @@ let tutorialIndex = 0;
 let win = false;
 
 function loadLevel(levelIndex) {
-          resetLegend()
+  resetLegend()
   clearText()
   setMap(levels[levelIndex])
-    tutorialIndex = 2;
+  tutorialIndex = 2;
   switch (levelIndex) {
     case 0:
       break
@@ -258,9 +258,17 @@ function loadLevel(levelIndex) {
         y: 4,
         color: color`3`
       })
+      break
+    case 2:
+      gameState = "game";
+      addText("Retry\nwith J", {
+        x: 2,
+        y: 4,
+        color: color`9`
+      })
       break;
     default:
-        gameState = "game";
+      gameState = "game";
   }
 }
 
@@ -286,33 +294,83 @@ eeeeeeeeee
 ....ea....`,
   map`
 eeeeeeeeee
-.b......a.
-.eeeeeeee.
-.eeeeeeee.
-.eeeeeeee.
-.eeeeeeee.
-ceeeeeeee.
-eeeeeeeeee`,
+eeeeeeehee
+eeeeeeoehe
+eeeeeeehee
+eeeeeeeeee
+......a...
+c..b..a...
+......a...`,
   map`
 eeeeeeeeee
 eeeeeeeeee
-ec.eeaae.e
-ec.eeaae.e
-ec...aae.e
-eeeeeeee.e
-eeb......e
+ec.aeea.ce
+e..aeea..e
+eeeeeeeeee
+eeeeeeeeee
+eb.......e
+eeeeeeeeee`,
+  map`
+eeeeeeeeee
+e...c....e
+e.eeeeee.e
+e.aaaaaabe
+e.eeeeee.e
+e.eeeeee.e
+e...c.c..e
+eeeeeeeeee`,
+  map`
+...eeeeeee
+.eceeeeeee
+.eeeeeec..
+.ee...eee.
+..a.b.a...
+eee...eeee
+eeeeeeeeee
+eeeeeeeeee`,
+  map`
+eeeeaaaaec
+eeeeaaeaec
+eeeeaaeaec
+eeeeaaeaeb
+eeeeaaeaea
+eeeeaaeaaa
+eeeeaaeeee
+eeeeaaaaaa`,
+  map`
+........ee
+.eeeeee.ee
+.eeeeee.ee
+..a.a.a.ee
+.eeeeeeeee
+..........
+...cc..c..
+b.........`,
+  map`
+c....b...c
+eeee.eeeee
+eeee...eee
+eeee...eee
+eeee...eee
+eeee.eeeee
+ceec.eeeee
+aaaaaaaaaa`,
+  map`
+eeeeeeeeee
+eeeeeeeeee
+eeeeeeeeee
+eeeeeeeeee
+eeeeeeeeee
+eeebeeeeee
+eeeeeeeeee
 eeeeeeeeee`,
 ]
 loadLevel(level)
 
-let playermovesPerEnemyMove = 1;
+let playermovesPerEnemyMove = 2;
 
 function afterPlayerMovement() {
   movetimer++;
-  if (movetimer == playermovesPerEnemyMove && tutorialIndex != 0) {
-    moveAnnoyers();
-    movetimer = 0;
-  }
   if (movetimer == 5 && tutorialIndex == 0) {
     addSprite(2, 1, wall)
     addSprite(3, 2, wall)
@@ -325,25 +383,7 @@ function afterPlayerMovement() {
       color: color`H`
     })
     tutorialIndex++;
-    movetimer = playermovesPerEnemyMove-1;
-  }
-  if (tutorialIndex == 1 && getFirst(trapdoor).x == getFirst(annoyer).x) {
-    clearText()
-    addText("lure them\nover\ntrapdoors\n\nand kill\nwith K", {
-      x: 1,
-      y: 2,
-      color: color`6`
-    })
-    clearTile(7, 1)
-    clearTile(8, 2)
-    clearTile(6, 2)
-    clearTile(7, 3)
-
-    addSprite(7, 1, button_outline)
-    addSprite(8, 2, button_outline)
-    addSprite(6, 2, button_outline)
-    addSprite(7, 3, button_filled)
-    tutorialIndex++
+    movetimer = playermovesPerEnemyMove - 1;
   }
 }
 
@@ -390,7 +430,7 @@ onInput("j", () => {
 })
 
 onInput("l", () => {
-  if (gameState=="gameover" && win) {
+  if (gameState == "gameover" && win && level != 8) {
     win = false;
     loadLevel(++level)
   }
@@ -727,29 +767,30 @@ LLLLLLLLLLLLLLLL`]
         })
       }, 1000);
 
-        // after 1.5 seconds, display the appropriate gameover text.
-        setTimeout(() => {
-          gameState = "gameover";
-          if (player_dead) {
-                      loadLevel(0)
-            addText("you killed\nyourself\n\npress J to\ntry again", {
-              x: 2,
-              y: 5,
-              color: color`5`
-            })
-            player_dead=false
-            clearTile(6, 3)
-            addSprite(6, 3, button_filled)
-          } else if (getAll(annoyer).length > 0) {
-                      loadLevel(0)
-            addText("you missed\nenemies!\n\npress J to\ntry again", {
-              x: 2,
-              y: 5,
-              color: color`H`
-            })
-            clearTile(6, 3)
-            addSprite(6, 3, button_filled)
-          } else {
+      // after 1.5 seconds, display the appropriate gameover text.
+      setTimeout(() => {
+        gameState = "gameover";
+        if (player_dead) {
+          loadLevel(0)
+          addText("you killed\nyourself\n\npress J to\ntry again", {
+            x: 2,
+            y: 5,
+            color: color`5`
+          })
+          player_dead = false
+          clearTile(6, 3)
+          addSprite(6, 3, button_filled)
+        } else if (getAll(annoyer).length > 0) {
+          loadLevel(0)
+          addText("you missed\nenemies!\n\npress J to\ntry again", {
+            x: 2,
+            y: 5,
+            color: color`H`
+          })
+          clearTile(6, 3)
+          addSprite(6, 3, button_filled)
+        } else {
+          if (level != 8) {
             loadLevel(0)
             win = true;
             addText("you win!\n\nuse L to\ncontinue", {
@@ -757,15 +798,33 @@ LLLLLLLLLLLLLLLL`]
               y: 5,
               color: color`4`
             })
-            addText("level " + String(level).padStart(2, '0') + " of 10", {
-              x: 3,
+            addText("level " + level + " of 8", {
+              x: 4,
               y: 14,
               color: color`2`
             })
             clearTile(8, 3)
             addSprite(8, 3, button_filled)
+          } else {
+            loadLevel(9)
+            addText("you win!", {
+              x: 6,
+              y: 5,
+              color: color`4`
+            })
+            addText("yay!", {
+              x: 10,
+              y: 10,
+              color: color`3`
+            })
+            addText("Created by Edward H\ngithub:headblockhead", {
+              x: 0,
+              y: 14,
+              color: color`2`
+            })
           }
-        }, 1500);
+        }
+      }, 1500);
       let annoyers = getAll(annoyer)
       let trapdoors = getAll(trapdoor)
       let player_inst = getFirst(player)
@@ -793,21 +852,153 @@ afterInput(() => {
 
 })
 
+var gameLoop = setInterval(() => {
+  if (tutorialIndex != 0) {
+    moveAnnoyers();
+  }
+  if (tutorialIndex == 1 && getFirst(trapdoor).x == getFirst(annoyer).x) {
+    clearText()
+    addText("lure them\nover\ntrapdoors\n\nand kill\nwith K", {
+      x: 1,
+      y: 2,
+      color: color`6`
+    })
+    clearTile(7, 1)
+    clearTile(8, 2)
+    clearTile(6, 2)
+    clearTile(7, 3)
+
+    addSprite(7, 1, button_outline)
+    addSprite(8, 2, button_outline)
+    addSprite(6, 2, button_outline)
+    addSprite(7, 3, button_filled)
+    tutorialIndex++
+  }
+}, 400);
+
 function moveAnnoyers() {
   player_sprite = getFirst(player)
   annoyers = getAll(annoyer)
-  annoyers.forEach((annoyer) => {
-    if (annoyer.x > player_sprite.x && annoyer.x-- != annoyer.x) {
+  annoyers.forEach((a) => {
+    trapdoors = getAll(trapdoor)
+    var shouldMove = true
+    trapdoors.forEach((trapdoor) => {
+      if (a.x == trapdoor.x && a.y == trapdoor.y) {
+        shouldMove = true
+      }
+    })
+    if (!shouldMove || gameState != "game") {
       return;
     }
-    if (annoyer.x < player_sprite.x && annoyer.x++ != annoyer.x) {
-      return;
-    }
-    if (annoyer.y > player_sprite.y && annoyer.y-- != annoyer.y) {
-      return;
-    }
-    if (annoyer.y < player_sprite.y && annoyer.y++ != annoyer.y) {
-      return;
+
+    // make a move
+    p = getFirst(player)
+    var path = astar(a, p)
+    if (path) {
+      a.x = path[1].x
+      a.y = path[1].y
+    } else {
+      if (a.x > p.x && a.x-- != a.x) {
+        return
+      }
+      if (a.y > p.y && a.y-- != a.y) {
+        return
+      }
+      if (a.x < p.x && a.x++ != a.x) {
+        return
+      }
+      if (a.y < p.y && a.y++ != a.y) {
+        return
+      }
     }
   });
+}
+
+function astar(start, end) {
+  const openSet = [];
+  const closedSet = [];
+  openSet.push(start);
+
+  while (openSet.length > 0) {
+    // Find the node with the lowest total cost in the open set
+    let currentNode = openSet[0];
+    for (let i = 1; i < openSet.length; i++) {
+      if (openSet[i].f < currentNode.f || (openSet[i].f === currentNode.f && openSet[i].h < currentNode.h)) {
+        currentNode = openSet[i];
+      }
+    }
+
+    // Remove the current node from the open set
+    openSet.splice(openSet.indexOf(currentNode), 1);
+    closedSet.push(currentNode);
+
+    // If the current node is the goal, reconstruct the path
+    if (currentNode.y === end.y && currentNode.x === end.x) {
+      let path = [];
+      let temp = currentNode;
+      while (temp) {
+        path.push(temp);
+        temp = temp.parent;
+      }
+      return path.reverse();
+    }
+
+    // Generate neighbors of the current node
+    const neighbors = [];
+    const directions = [
+      [0, 1],
+      [1, 0],
+      [0, -1],
+      [-1, 0]
+    ]; // Right, Down, Left, Up
+
+    for (let dir of directions) {
+      const neighborRow = currentNode.y + dir[0];
+      const neighborCol = currentNode.x + dir[1];
+
+      if (isValidCell(neighborRow, neighborCol)) {
+        const neighbor = {
+          y: neighborRow,
+          x: neighborCol,
+          g: currentNode.g + 1, // Cost to move to a neighboring cell is 1
+          h: heuristic({ y: neighborRow, x: neighborCol }, end),
+          f: 0,
+          parent: currentNode,
+        };
+
+        neighbor.f = neighbor.g + neighbor.h;
+
+        // Check if the neighbor is already in the closed set
+        if (closedSet.some((node) => node.y === neighbor.y && node.x === neighbor.x)) {
+          continue;
+        }
+
+        // Check if the neighbor is already in the open set
+        const openSetNode = openSet.find((node) => node.y === neighbor.y && node.x === neighbor.x);
+        if (!openSetNode || neighbor.g < openSetNode.g) {
+          openSet.push(neighbor);
+        }
+      }
+    }
+  }
+
+  // No path found
+  return null;
+}
+
+function isValidCell(y, x) {
+  var potentialTile = getTile(x, y)
+  if (!potentialTile || x > 9 || y > 7 || x < 0 || y < 0) {
+    return false
+  }
+  if (potentialTile.length != 0 && potentialTile[0].type == wall) {
+    return false
+  }
+  return true
+}
+
+function heuristic(position0, position1) {
+  let d1 = Math.abs(position1.x - position0.x);
+  let d2 = Math.abs(position1.y - position0.y);
+  return d1 + d2;
 }
