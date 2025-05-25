@@ -914,6 +914,7 @@ function moveAnnoyers() {
   });
 }
 
+// A* pathfinding algorithm implementation from github:adamstirtan/astar-js
 function astar(start, end) {
   const openSet = [];
   const closedSet = [];
